@@ -100,12 +100,13 @@ async function runReview() {
   title.textContent = "Analizando...";
 
   try {
+    if (!API_KEY) throw new Error("API key no configurada. Agrega tu key en reviewer.js (variable API_KEY).");
+
     const headers = {
       "Content-Type": "application/json",
+      "x-api-key": API_KEY,
       "anthropic-version": "2023-06-01",
-      "anthropic-dangerous-direct-browser-ipc-access": "true",
     };
-    if (API_KEY) headers["x-api-key"] = API_KEY;
 
     const response = await fetch("https://api.anthropic.com/v1/messages", {
       method: "POST",
