@@ -100,7 +100,11 @@ async function runReview() {
   title.textContent = "Analizando...";
 
   try {
-    const headers = { "Content-Type": "application/json" };
+    const headers = {
+      "Content-Type": "application/json",
+      "anthropic-version": "2023-06-01",
+      "anthropic-dangerous-direct-browser-ipc-access": "true",
+    };
     if (API_KEY) headers["x-api-key"] = API_KEY;
 
     const response = await fetch("https://api.anthropic.com/v1/messages", {
