@@ -67,6 +67,93 @@ body {
 .screen-name-row input:focus { border-color: #754BF1; box-shadow: 0 0 0 3px rgba(117,75,241,0.18); }
 .screen-name-row input::placeholder { color: #4B5563; }
 
+.tokens-section {
+  margin-bottom: 16px;
+  border: 1px solid #E5E7EB;
+  border-radius: 10px;
+  background: #FFFFFF;
+  overflow: hidden;
+}
+
+.tokens-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 14px;
+  cursor: pointer;
+  user-select: none;
+  background: #FFFFFF;
+  transition: background 120ms;
+}
+.tokens-header:hover { background: #F9FAFB; }
+
+.tokens-title { font-size: 13px; font-weight: 600; color: #374151; flex: 1; }
+
+.tokens-badge {
+  font-size: 11px;
+  font-weight: 500;
+  padding: 2px 8px;
+  border-radius: 9999px;
+  background: #F3F4F6;
+  color: #6B7280;
+}
+.tokens-badge.active { background: #ECFDF3; color: #027A48; }
+
+.tokens-chevron { font-size: 11px; color: #9CA3AF; transition: transform 200ms; }
+.tokens-chevron.open { transform: rotate(90deg); }
+
+.tokens-body {
+  display: none;
+  padding: 0 14px 14px;
+  border-top: 1px solid #F3F4F6;
+}
+.tokens-body.open { display: block; }
+
+.tokens-hint { font-size: 12px; color: #6B7280; margin: 10px 0 8px; line-height: 1.5; }
+.tokens-hint code { background: #F3F4F6; padding: 1px 5px; border-radius: 4px; font-family: monospace; font-size: 11px; }
+
+.tokens-body textarea {
+  width: 100%;
+  border: 1px solid #D0D5DD;
+  border-radius: 8px;
+  padding: 10px 12px;
+  font-size: 12px;
+  font-family: 'SF Mono', 'Fira Code', monospace;
+  color: #111827;
+  background: #F9FAFB;
+  resize: vertical;
+  outline: none;
+  line-height: 1.6;
+  transition: border-color 120ms, box-shadow 120ms;
+}
+.tokens-body textarea:focus { border-color: #754BF1; box-shadow: 0 0 0 3px rgba(117,75,241,0.18); background: #FFFFFF; }
+.tokens-body textarea::placeholder { color: #9CA3AF; }
+
+.tokens-actions {
+  display: flex;
+  gap: 8px;
+  margin-top: 8px;
+  justify-content: flex-end;
+}
+
+.btn-ghost {
+  height: 32px;
+  padding: 0 14px;
+  background: transparent;
+  border: 1px solid #D0D5DD;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 500;
+  color: #374151;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  transition: background 150ms, border-color 150ms;
+}
+.btn-ghost:hover { background: #F3F4F6; border-color: #9CA3AF; }
+.btn-ghost.danger { color: #B42318; }
+.btn-ghost.danger:hover { background: #FFF1F0; border-color: #FDA29B; }
+
 .btn {
   height: 40px; padding: 0 24px;
   background: #754BF1; color: #FFFFFF;

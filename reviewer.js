@@ -6,6 +6,55 @@ const API_KEY = "";  // ← pegar key aquí para uso local
 // ─── Estado ──────────────────────────────────────────────────────────────────
 const images = { figma: null, qa: null };
 
+// ─── Tokens ───────────────────────────────────────────────────────────────────
+const TOKENS_KEY = "design-reviewer:tokens";
+
+function initTokens() {
+  const saved = localStorage.getItem(TOKENS_KEY) || "";
+  document.getElementById("tokens-input").value = saved;
+  updateTokensBadge(saved);
+}
+
+function saveTokens() {
+  const val = document.getElementById("tokens-input").value;
+  localStorage.setItem(TOKENS_KEY, val);
+  updateTokensBadge(val);
+}
+
+function clearTokens() {
+  document.getElementById("tokens-input").value = "";
+  localStorage.removeItem(TOKENS_KEY);
+  updateTokensBadge("");
+}
+
+function loadTokensFile(input) {
+  const file = input.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = e => {
+    document.getElementById("tokens-input").value = e.target.result;
+    saveTokens();
+  };
+  reader.readAsText(file);
+  input.value = "";
+}
+
+function updateTokensBadge(content) {
+  const badge = document.getElementById("tokens-badge");
+  const hasTokens = content.trim().length > 0;
+  badge.textContent = hasTokens ? "Activos" : "Sin tokens";
+  badge.className = "tokens-badge" + (hasTokens ? " active" : "");
+}
+
+function toggleTokens() {
+  const body = document.getElementById("tokens-body");
+  const chevron = document.getElementById("tokens-chevron");
+  const open = body.classList.toggle("open");
+  chevron.classList.toggle("open", open);
+}
+
+initTokens();
+
 // ─── Uploads ─────────────────────────────────────────────────────────────────
 function handleUpload(type, input) {
   const file = input.files[0];
@@ -111,8 +160,11 @@ async function runReview() {
 
 // ─── System prompt ────────────────────────────────────────────────────────────
 function buildSystemPrompt() {
-  // Lee los tokens desde tokens.md si los tienes en el repo, o edita aquí.
-  // Por defecto incluye un resumen de los tokens del sistema.
+  const tokens = (localStorage.getItem(TOKENS_KEY) || "").trim();
+  const tokensSection = tokens
+    ? `\n\n## Design tokens de referencia\n\`\`\`\n${tokens}\n\`\`\`\nCualquier color, espaciado o radio que NO aparezca aquí es un token inválido y debe reportarse.`
+    : "\n\n(No se cargaron design tokens. Evalúa colores y espaciados visualmente comparando las dos imágenes.)";
+
   return `Eres un senior product designer revisando pantallas de un prototipo.
 
 Recibirás DOS imágenes:
@@ -122,7 +174,7 @@ Recibirás DOS imágenes:
 Revisa contra, y solo contra:
 
 - **Drift visual vs Figma**: layout, jerarquía, componentes, colores, espaciados, tipografía. Marca cualquier diferencia visible.
-- **Tokens del sistema**: cualquier color, espaciado o radio que NO coincida con los tokens válidos definidos en tokens.md de este repo.
+- **Tokens del sistema**: cualquier color, espaciado o radio que NO coincida con los tokens válidos.
 - **Estados requeridos**: la pantalla debe tener estado vacío, carga, error y éxito. Marca los que falten.
 - **Touch targets**: mínimo 44px. Marca los elementos interactivos visualmente pequeños.
 
@@ -136,5 +188,5 @@ Formato de salida EXACTO:
 - [elemento] Descripción del problema
 ### ✅ Lo que está bien
 - Resumen breve
----`;
+---${tokensSection}`;
 }

@@ -41,6 +41,23 @@
     </div>
   </div>
 
+  <div class="tokens-section">
+    <div class="tokens-header" onclick="toggleTokens()">
+      <span class="tokens-title">Design Tokens</span>
+      <span class="tokens-badge" id="tokens-badge">Sin tokens</span>
+      <span class="tokens-chevron" id="tokens-chevron">▸</span>
+    </div>
+    <div class="tokens-body" id="tokens-body">
+      <p class="tokens-hint">Pega el contenido de <code>tokens.md</code>. Se inyecta en el system prompt antes de cada revisión.</p>
+      <textarea id="tokens-input" placeholder="# Design Tokens&#10;&#10;## Colores&#10;primary: #754BF1&#10;..." rows="10" oninput="saveTokens()"></textarea>
+      <div class="tokens-actions">
+        <label class="btn-ghost" for="tokens-file-input">Cargar archivo</label>
+        <input type="file" id="tokens-file-input" accept=".md,.txt" onchange="loadTokensFile(this)" style="display:none">
+        <button class="btn-ghost danger" onclick="clearTokens()">Limpiar</button>
+      </div>
+    </div>
+  </div>
+
   <button class="btn" id="review-btn" onclick="runReview()" disabled>
     Revisar
   </button>
