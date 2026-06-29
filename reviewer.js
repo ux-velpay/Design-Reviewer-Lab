@@ -1,7 +1,7 @@
 // ─── Config ──────────────────────────────────────────────────────────────────
-// Agrega tu API key de Anthropic aquí, o usa una variable de entorno si tienes
-// un backend. NUNCA subas este archivo con la key hardcodeada a un repo público.
-const API_KEY = "sk-ant-api03-...";  // ← pegar key aquí para uso local
+// Obtén tu key GRATIS en: aistudio.google.com → Get API key
+// NUNCA subas este archivo con la key hardcodeada a un repo público.
+const API_KEY = "";  // ← pegar key de Google AI Studio aquí
 
 // ─── Estado ──────────────────────────────────────────────────────────────────
 const images = { figma: null, qa: null };
@@ -100,55 +100,34 @@ async function runReview() {
   title.textContent = "Analizando...";
 
   try {
-    if (!API_KEY) throw new Error("API key no configurada. Agrega tu key en reviewer.js (variable API_KEY).");
+    if (!API_KEY) throw new Error("API key no configurada. Obtén tu key gratis en aistudio.google.com y pégala en reviewer.js (variable API_KEY).");
 
-    const headers = {
-      "Content-Type": "application/json",
-      "x-api-key": API_KEY,
-      "anthropic-version": "2023-06-01",
-    };
+    const systemPrompt = buildSystemPrompt();
+    const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${API_KEY}`;
 
-    const response = await fetch("https://api.anthropic.com/v1/messages", {
+    const response = await fetch(url, {
       method: "POST",
-      headers,
+      headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        model: "claude-sonnet-4-6",
-        max_tokens: 1000,
-        system: buildSystemPrompt(),
-        messages: [
+        systemInstruction: { parts: [{ text: systemPrompt }] },
+        contents: [
           {
             role: "user",
-            content: [
-              {
-                type: "text",
-                text: `Pantalla: "${screenName}"\n\nPrimera imagen: export de Figma. Segunda imagen: captura de QA/STG.`,
-              },
-              {
-                type: "image",
-                source: {
-                  type: "base64",
-                  media_type: images.figma.mediaType,
-                  data: images.figma.base64,
-                },
-              },
-              {
-                type: "image",
-                source: {
-                  type: "base64",
-                  media_type: images.qa.mediaType,
-                  data: images.qa.base64,
-                },
-              },
+            parts: [
+              { text: `Pantalla: "${screenName}"\n\nPrimera imagen: export de Figma. Segunda imagen: captura de QA/STG.` },
+              { inlineData: { mimeType: images.figma.mediaType, data: images.figma.base64 } },
+              { inlineData: { mimeType: images.qa.mediaType,   data: images.qa.base64   } },
             ],
           },
         ],
+        generationConfig: { maxOutputTokens: 1200 },
       }),
     });
 
     const data = await response.json();
     if (!response.ok) throw new Error(data.error?.message || "Error en la API");
 
-    const text = data.content.map(b => b.text || "").join("\n").trim();
+    const text = data.candidates?.[0]?.content?.parts?.map(p => p.text || "").join("\n").trim() || "Sin respuesta";
     body.className = "result-body";
     body.textContent = text;
     dot.className = "status-dot done";
