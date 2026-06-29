@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Design Reviewer</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<div class="container">
+  <div class="header">
+    <h1>Design Reviewer</h1>
+    <p>Sube el export de Figma y la captura de QA/STG. El reviewer compara ambas contra los design tokens.</p>
+  </div>
+
+  <div class="screen-name-row">
+    <label for="screen-name">Nombre de la pantalla</label>
+    <input type="text" id="screen-name" placeholder="ej. Login, Dashboard, Checkout">
+  </div>
+
+  <div class="upload-grid">
+    <div class="upload-zone" id="zone-figma">
+      <input type="file" accept="image/*" onchange="handleUpload('figma', this)">
+      <div class="placeholder">
+        <div class="upload-label">Figma</div>
+        <div class="upload-hint">Export del frame de Figma</div>
+      </div>
+      <img class="preview" id="preview-figma" alt="Figma preview">
+      <div class="upload-name" id="name-figma"></div>
+    </div>
+
+    <div class="upload-zone" id="zone-qa">
+      <input type="file" accept="image/*" onchange="handleUpload('qa', this)">
+      <div class="placeholder">
+        <div class="upload-label">QA / STG</div>
+        <div class="upload-hint">Captura de la pantalla real</div>
+      </div>
+      <img class="preview" id="preview-qa" alt="QA preview">
+      <div class="upload-name" id="name-qa"></div>
+    </div>
+  </div>
+
+  <button class="btn" id="review-btn" onclick="runReview()" disabled>
+    Revisar
+  </button>
+
+  <div class="result" id="result">
+    <div class="result-header">
+      <div class="status-dot" id="status-dot"></div>
+      <span class="result-title" id="result-title">Analizando...</span>
+    </div>
+    <div class="result-body" id="result-body"></div>
+  </div>
+</div>
+
+<script src="reviewer.js"></script>
+</body>
+</html>
