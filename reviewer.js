@@ -1,7 +1,7 @@
 // ─── Config ──────────────────────────────────────────────────────────────────
 // Agrega tu API key de Anthropic aquí, o usa una variable de entorno si tienes
 // un backend. NUNCA subas este archivo con la key hardcodeada a un repo público.
-const API_KEY = "";  // ← pegar key aquí para uso local
+const API_KEY = "sk-ant-api03-...";  // ← pegar key aquí para uso local
 
 // ─── Estado ──────────────────────────────────────────────────────────────────
 const images = { figma: null, qa: null };
